@@ -16,7 +16,7 @@ If the provided HTML is extensive, focus on creating skeleton patterns for the m
 2. Apply "animate-pulse" class to add loading animations to the skeleton elements.
 3. For large HTML structures, identify the main repeating patterns and create skeletons for these patterns only. Do not create individual skeletons for every single element.
 4. Use appropriate sizing classes (width, height) to maintain the general layout structure.
-5. Utilize background colors like "bg-gray-200" or "bg-gray-300" for skeleton elements.
+5. Utilize background colors like "bg-gray-200" or "bg-gray-300" for skeleton elements don't use the exact colors from the original HTML.
 6. Maintain the overall structure and hierarchy of the original HTML.
 7. Don't replicate the dark mode styles from the original HTML.
 8. If the source elements has rounded corners, reproduce them in the skeleton.

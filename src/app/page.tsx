@@ -1,18 +1,46 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Settings, Copy, Eye, Code } from 'lucide-react';
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { useCompletion } from 'ai/react';
+require("codemirror/mode/xml/xml.js");
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { useCompletion } from "ai/react";
+import {
+  Code,
+  Copy,
+  Eye,
+  Settings,
+  LoaderCircle,
+  CheckCircleIcon,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { UnControlled as CodeMirror } from "react-codemirror2";
 
 export default function SkeletonGenerator() {
-  const [activeTab, setActiveTab] = useState('preview');
-  const [htmlCode, setHtmlCode] = useState('');
+  const [activeTab, setActiveTab] = useState("preview");
+  const [htmlCode, setHtmlCode] = useState("");
+  const [copyLabel, setCopyLabel] = useState("Copy");
+  const { toast } = useToast();
+  const editorOutput = useRef();
+  const wrapperOutput = useRef;
 
-  const { completion, complete } = useCompletion({
+  const editorOutputWillUnmount = () => {
+    if (editorOutput.current) {
+      (editorOutput.current as any).display.wrapper.remove();
+    }
+  };
+
+  const { completion, complete, isLoading } = useCompletion({
     api: "/api/generate-skeleton",
+    onFinish: () => setActiveTab("preview"),
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error.message,
+      });
+    },
   });
 
   const code = completion.replace(/^```html\n/, "").replace(/\n```$/, "");
@@ -21,8 +49,14 @@ export default function SkeletonGenerator() {
     <div className="flex flex-col h-screen bg-gray-100 dark:bg-gray-900">
       <header className="bg-white dark:bg-gray-800 shadow">
         <div className="py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Skeleton Generator</h1>
-          <Button variant="default" size="sm" className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Skeleton Generator
+          </h1>
+          <Button
+            variant="default"
+            size="sm"
+            className="flex items-center gap-2"
+          >
             <Settings className="w-4 h-4" />
           </Button>
         </div>
@@ -32,19 +66,31 @@ export default function SkeletonGenerator() {
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           <Card className="flex-1 m-2 flex flex-col overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 py-2">
-              <CardTitle className="text-xl font-bold">Paste Your HTML Code</CardTitle>
-              <Button size="sm"
-              onClick={async () => {
-
-                await complete( htmlCode );
-              }
-                }
-              >Generate</Button>
+              <CardTitle className="text-xl font-bold">
+                Paste Your HTML Code
+              </CardTitle>
+              <Button
+                size="sm"
+                onClick={async () => {
+                  setActiveTab("code");
+                  await complete(htmlCode);
+                }}
+                {...(isLoading ? { disabled: true } : {})}
+              >
+                {isLoading ? (
+                  <>
+                    <LoaderCircle className="animate-spin w-4 h-4 mr-2" />
+                    Generating
+                  </>
+                ) : (
+                  "Generate"
+                )}
+              </Button>
             </CardHeader>
             <CardContent className="flex-grow p-2 overflow-hidden">
-              <Textarea 
-                className="w-full h-full resize-none" 
-                placeholder="Paste your HTML code here..." 
+              <Textarea
+                className="w-full h-full resize-none"
+                placeholder="Paste your HTML code here..."
                 onChange={(e) => setHtmlCode(e.target.value)}
                 value={htmlCode}
               />
@@ -54,18 +100,18 @@ export default function SkeletonGenerator() {
           <Card className="flex-1 m-2 flex flex-col overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 py-2">
               <div className="flex space-x-1">
-                <Button 
-                  variant={activeTab === 'preview' ? "default" : "secondary"}
-                  onClick={() => setActiveTab('preview')}
+                <Button
+                  variant={activeTab === "preview" ? "default" : "secondary"}
+                  onClick={() => setActiveTab("preview")}
                   className="flex items-center gap-2"
                   size="sm"
                 >
                   <Eye className="w-4 h-4" />
                   Preview
                 </Button>
-                <Button 
-                  variant={activeTab === 'code' ? "default" : "secondary"}
-                  onClick={() => setActiveTab('code')}
+                <Button
+                  variant={activeTab === "code" ? "default" : "secondary"}
+                  onClick={() => setActiveTab("code")}
                   className="flex items-center gap-2"
                   size="sm"
                 >
@@ -73,21 +119,41 @@ export default function SkeletonGenerator() {
                   Code
                 </Button>
               </div>
-              <Button variant="outline" size="sm" className="flex items-center gap-2">
-                <Copy className="w-4 h-4" />
-                Copy
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+                onClick={() => {
+                  navigator.clipboard.writeText(code);
+                  setCopyLabel("Copied!");
+                  setTimeout(() => setCopyLabel("Copy"), 3000);
+                }}
+              >
+                {copyLabel === "Copied!" ? (
+                  <CheckCircleIcon className="w-4 h-4 text-green-500" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
+
+                {copyLabel}
               </Button>
             </CardHeader>
             <CardContent className="flex-grow p-2 overflow-hidden">
               <div className="w-full h-full p-4 bg-gray-100 dark:bg-gray-700 rounded-md overflow-auto">
-                {activeTab === 'preview' ? (
+                {activeTab === "preview" ? (
                   <Previewer code={code} />
                 ) : (
-                  <pre className="text-sm">
-                    <code>
-                      {code}
-                    </code>
-                  </pre>
+                  <CodeMirror
+                    value={code}
+                    options={{
+                      mode: "xml",
+                      theme: "xq-light",
+                      lineNumbers: true,
+                    }}
+                    onChange={(editor, data, value) => {}}
+                    editorDidMount={(e) => editorOutput.current = e}
+                    editorWillUnmount={editorOutputWillUnmount}
+                  />
                 )}
               </div>
             </CardContent>
@@ -102,7 +168,8 @@ const Previewer = ({ code }: { code: string }) => {
   const iframeRef = useRef(null);
 
   useEffect(() => {
-    const iframeDocument = (iframeRef.current as HTMLIFrameElement | null)?.contentDocument;
+    const iframeDocument = (iframeRef.current as HTMLIFrameElement | null)
+      ?.contentDocument;
     if (!iframeDocument) return;
     iframeDocument.open();
     iframeDocument.write(`
@@ -127,4 +194,3 @@ const Previewer = ({ code }: { code: string }) => {
     </div>
   );
 };
-
