@@ -15,6 +15,8 @@ export default function SkeletonGenerator() {
     api: "/api/generate-skeleton",
   });
 
+  const code = completion.replace(/^```html\n/, "").replace(/\n```$/, "");
+
   return (
     <div className="flex flex-col h-screen bg-gray-100 dark:bg-gray-900">
       <header className="bg-white dark:bg-gray-800 shadow">
@@ -79,11 +81,11 @@ export default function SkeletonGenerator() {
             <CardContent className="flex-grow p-2 overflow-hidden">
               <div className="w-full h-full p-4 bg-gray-100 dark:bg-gray-700 rounded-md overflow-auto">
                 {activeTab === 'preview' ? (
-                  <Previewer code={completion} />
+                  <Previewer code={code} />
                 ) : (
                   <pre className="text-sm">
                     <code>
-                      {completion}
+                      {code}
                     </code>
                   </pre>
                 )}
