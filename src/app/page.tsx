@@ -122,7 +122,7 @@ const Previewer = ({ code }: { code: string }) => {
   }, [code]);
 
   return (
-    <div className="text-center text-gray-500 dark:text-gray-400">
+    <div className="text-center text-gray-500 dark:text-gray-400 h-full">
       <iframe ref={iframeRef} className="w-full h-full border-0"></iframe>
     </div>
   );

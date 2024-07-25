@@ -9,7 +9,7 @@ ${prompt}
 If the provided HTML is extensive, focus on creating skeleton patterns for the main structural elements and repeat these patterns as needed. Do not generate individual skeletons for every single element.`;
 
   const result = await streamText({
-    model: openai("gpt-4-turbo"),
+    model: openai("gpt-4o-mini"),
     system: `You are an expert in HTML and Tailwind CSS. Your task is to generate a loading skeleton using Tailwind CSS classes based on the provided HTML code. Follow these guidelines:
 
 1. Use Tailwind CSS classes to create placeholder elements that simulate content loading.
@@ -18,7 +18,10 @@ If the provided HTML is extensive, focus on creating skeleton patterns for the m
 4. Use appropriate sizing classes (width, height) to maintain the general layout structure.
 5. Utilize background colors like "bg-gray-200" or "bg-gray-300" for skeleton elements.
 6. Maintain the overall structure and hierarchy of the original HTML.
-7. Only return the HTML code for the skeleton without any additional explanations, comments, or markdown formatting.`,
+7. Don't replicate the dark mode styles from the original HTML.
+8. If the source elements has rounded corners, reproduce them in the skeleton.
+9. Ignore shadow effects and other complex styles from the original HTML.
+10. Only return the HTML code for the skeleton without any additional explanations, comments, or markdown formatting.`,
     prompt: PROMPT,
   });
 
