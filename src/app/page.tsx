@@ -27,7 +27,6 @@ export default function SkeletonGenerator() {
 
   useEffect(() => {
     if (error) {
-      console.log(error);
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
