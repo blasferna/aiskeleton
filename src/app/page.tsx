@@ -1,18 +1,12 @@
 "use client";
 
-import CodeMirror from "@/components/codemirror";
+import CodeInput from "@/components/code-input";
+import ResultOutput from "@/components/result-output";
+import TabSwitcher from "@/components/tab-switcher";
 import { useToast } from "@/components/ui/use-toast";
-import { EditorTheme } from "@/types";
 import { useCompletion } from "ai/react";
-import {
-  CheckCircleIcon,
-  Code,
-  Copy,
-  Eye,
-  LoaderCircle,
-  Zap,
-} from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { CheckCircleIcon, Copy, LoaderCircle, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function SkeletonGenerator() {
   const [activeTab, setActiveTab] = useState("preview");
@@ -46,7 +40,6 @@ export default function SkeletonGenerator() {
           </h1>
         </div>
       </header>
-
       <main className="flex-grow flex overflow-hidden bg-gray-900">
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
           <div className="flex-1 flex flex-col overflow-hidden rounded-none border-t lg:border-r border-gray-700">
@@ -80,44 +73,15 @@ export default function SkeletonGenerator() {
               </button>
             </div>
             <div className="flex-grow p-4 overflow-hidden">
-              <div className="w-full h-full rounded-md overflow-auto">
-                <CodeMirror
-                  code={htmlCode}
-                  editorTheme={EditorTheme.DRACULA}
-                  onCodeChange={(code) => {
-                    setHtmlCode(code);
-                  }}
-                />
-              </div>
+              <CodeInput
+                code={htmlCode}
+                onCodeChange={(code) => setHtmlCode(code)}
+              />
             </div>
           </div>
-
           <div className="flex-1 flex flex-col overflow-hidden rounded-none border border-gray-700 border-b-0 border-r-0 border-l-0 lg:border-t">
             <div className="flex flex-row items-center justify-between space-y-0 pt-4 pb-0 px-4">
-              <div className="bg-gray-800 rounded-md p-1 inline-flex">
-                <button
-                  className={`px-3 py-1 text-sm flex items-center gap-2 rounded ${
-                    activeTab === "preview"
-                      ? "bg-gray-700 text-white"
-                      : "text-gray-400 hover:text-gray-200"
-                  }`}
-                  onClick={() => setActiveTab("preview")}
-                >
-                  <Eye className="w-4 h-4" />
-                  Preview
-                </button>
-                <button
-                  className={`px-3 py-1 text-sm flex items-center gap-2 rounded ${
-                    activeTab === "code"
-                      ? "bg-gray-700 text-white"
-                      : "text-gray-400 hover:text-gray-200"
-                  }`}
-                  onClick={() => setActiveTab("code")}
-                >
-                  <Code className="w-4 h-4" />
-                  Code
-                </button>
-              </div>
+              <TabSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
               <button
                 className="bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-gray-50 font-medium text-sm py-2 px-4 rounded inline-flex items-center transition-colors duration-200 ease-in-out"
                 onClick={() => {
@@ -131,25 +95,15 @@ export default function SkeletonGenerator() {
                 ) : (
                   <Copy className="w-4 h-4 mr-2" />
                 )}
-
                 {copyLabel}
               </button>
             </div>
             <div className="flex-grow p-4 overflow-hidden">
-              {activeTab === "preview" ? (
-                <div className="w-full h-full p-4 bg-[#2d2f3f] rounded-md overflow-auto">
-                  <Previewer code={code} />
-                </div>
-              ) : (
-                <div className="w-full h-full rounded-md overflow-auto">
-                  <CodeMirror
-                    code={code}
-                    editorTheme={EditorTheme.DRACULA}
-                    onCodeChange={(code) => {}}
-                    editable={false}
-                  />
-                </div>
-              )}
+              <ResultOutput
+                activeTab={activeTab}
+                code={code}
+                onCodeChange={(code) => {}}
+              />
             </div>
           </div>
         </div>
@@ -157,34 +111,3 @@ export default function SkeletonGenerator() {
     </div>
   );
 }
-
-const Previewer = ({ code }: { code: string }) => {
-  const iframeRef = useRef(null);
-
-  useEffect(() => {
-    const iframeDocument = (iframeRef.current as HTMLIFrameElement | null)
-      ?.contentDocument;
-    if (!iframeDocument) return;
-    iframeDocument.open();
-    iframeDocument.write(`
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://cdn.tailwindcss.com"></script>
-      </head>
-      <body>
-        ${code}
-      </body>
-      </html>
-    `);
-    iframeDocument.close();
-  }, [code]);
-
-  return (
-    <div className="text-center text-gray-500 dark:text-gray-400 h-full">
-      <iframe ref={iframeRef} className="w-full h-full border-0"></iframe>
-    </div>
-  );
-};
