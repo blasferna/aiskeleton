@@ -1,6 +1,5 @@
 "use client";
 
-require("codemirror/mode/xml/xml.js");
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,21 +14,15 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { UnControlled as CodeMirror } from "react-codemirror2";
+import CodeMirror from "@/components/codemirror";
+import { EditorTheme } from "@/types";
 
 export default function SkeletonGenerator() {
   const [activeTab, setActiveTab] = useState("preview");
   const [htmlCode, setHtmlCode] = useState("");
   const [copyLabel, setCopyLabel] = useState("Copy");
   const { toast } = useToast();
-  const editorOutput = useRef();
-  const wrapperOutput = useRef;
 
-  const editorOutputWillUnmount = () => {
-    if (editorOutput.current) {
-      (editorOutput.current as any).display.wrapper.remove();
-    }
-  };
 
   const { completion, complete, isLoading } = useCompletion({
     api: "/api/generate-skeleton",
@@ -88,12 +81,11 @@ export default function SkeletonGenerator() {
               </Button>
             </CardHeader>
             <CardContent className="flex-grow p-2 overflow-hidden">
-              <Textarea
-                className="w-full h-full resize-none"
-                placeholder="Paste your HTML code here..."
-                onChange={(e) => setHtmlCode(e.target.value)}
-                value={htmlCode}
-              />
+
+                <div className="w-full h-full rounded-md overflow-auto">
+                  <CodeMirror code={htmlCode} editorTheme={EditorTheme.ESPRESSO} onCodeChange={(code) => { setHtmlCode(code) }} />
+                  </div>
+
             </CardContent>
           </Card>
 
@@ -139,23 +131,17 @@ export default function SkeletonGenerator() {
               </Button>
             </CardHeader>
             <CardContent className="flex-grow p-2 overflow-hidden">
-              <div className="w-full h-full p-4 bg-gray-100 dark:bg-gray-700 rounded-md overflow-auto">
+              
                 {activeTab === "preview" ? (
+                  <div className="w-full h-full p-4 bg-gray-100 dark:bg-gray-700 rounded-md overflow-auto">
                   <Previewer code={code} />
+                  </div>
                 ) : (
-                  <CodeMirror
-                    value={code}
-                    options={{
-                      mode: "xml",
-                      theme: "xq-light",
-                      lineNumbers: true,
-                    }}
-                    onChange={(editor, data, value) => {}}
-                    editorDidMount={(e) => editorOutput.current = e}
-                    editorWillUnmount={editorOutputWillUnmount}
-                  />
+                  <div className="w-full h-full rounded-md overflow-auto">
+                  <CodeMirror code={code} editorTheme={EditorTheme.ESPRESSO} onCodeChange={(code) => {}} />
+                  </div>
                 )}
-              </div>
+              
             </CardContent>
           </Card>
         </div>

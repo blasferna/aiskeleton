@@ -1,9 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-  
-@import 'codemirror/lib/codemirror.css';
-@import 'codemirror/theme/xq-light.css';
 
-
-.CodeMirror { min-height: 100% }
+.cm-editor {
+    height: 100%;
+}
