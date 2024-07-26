@@ -1,7 +1,7 @@
 import { useRef, useEffect, useMemo } from "react";
 import { EditorState } from "@codemirror/state";
 import { EditorView, keymap, lineNumbers, ViewUpdate } from "@codemirror/view";
-import { espresso, cobalt } from "thememirror";
+import { espresso, cobalt, dracula } from "thememirror";
 import {
   defaultKeymap,
   history,
@@ -17,11 +17,13 @@ interface Props {
   code: string;
   editorTheme: EditorTheme;
   onCodeChange: (code: string) => void;
+  editable?: boolean;
 }
 
-function CodeMirror({ code, editorTheme, onCodeChange }: Props) {
+function CodeMirror({ code, editorTheme, onCodeChange, editable = true }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const view = useRef<EditorView | null>(null);
+  const theme = editorTheme === EditorTheme.ESPRESSO ? espresso : EditorTheme.DRACULA ? dracula : cobalt;
   const editorState = useMemo(
     () =>
       EditorState.create({
@@ -36,7 +38,7 @@ function CodeMirror({ code, editorTheme, onCodeChange }: Props) {
           lineNumbers(),
           bracketMatching(),
           html(),
-          editorTheme === EditorTheme.ESPRESSO ? espresso : cobalt,
+          theme,
           EditorView.lineWrapping,
           EditorView.updateListener.of((update: ViewUpdate) => {
             if (update.docChanged) {
@@ -44,6 +46,7 @@ function CodeMirror({ code, editorTheme, onCodeChange }: Props) {
               onCodeChange(updatedCode);
             }
           }),
+          EditorView.editable.of(editable),
         ],
       }),
     [editorTheme]
@@ -72,7 +75,7 @@ function CodeMirror({ code, editorTheme, onCodeChange }: Props) {
 
   return (
     <div
-      className="border border-gray-200 dark:border-gray-700 overflow-hidden rounded-md h-full"
+      className="border border-gray-700 overflow-hidden rounded-md h-full"
       ref={ref}
     />
   );
