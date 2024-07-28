@@ -1,7 +1,7 @@
 
 # Skeleton Generator
 
-![imagen](https://aiskeleton.vercel.app/og-image.png)
+![image](https://github.com/user-attachments/assets/16d27ec3-b370-4237-b57d-5fb6448f1c26)
 
 ## Overview
 
@@ -26,8 +26,8 @@ Make sure you have the following installed:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/blasferna/skeleton-generator.git
-    cd skeleton-generator
+    git clone https://github.com/blasferna/aiskeleton.git
+    cd aiskeleton
     ```
 
 2. Install the dependencies:
