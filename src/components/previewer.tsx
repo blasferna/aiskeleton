@@ -17,7 +17,7 @@ const EmptyState: React.FC = () => {
           No Skeletons Yet
         </h2>
         <p className="text-gray-300 mb-6">
-          This is where your AI-generated skeletons will appear. Let's get started!
+          This is where your AI-generated skeletons will appear. Let&apos;s get started!
         </p>
         <div className="space-y-4 mb-6">
           <Step number={1} text="Paste your code in the left panel" />
