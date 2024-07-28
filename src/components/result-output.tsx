@@ -17,7 +17,7 @@ const ResultOutput: React.FC<ResultOutputProps> = ({
   return (
     <React.Fragment>
       {activeTab === "preview" ? (
-        <div className="w-full h-full p-4 bg-[#2d2f3f] rounded-md overflow-auto">
+        <div className={`w-full h-full overflow-auto ${code&&"p-4  bg-white rounded-md"}`}>
           <Previewer code={code} />
         </div>
       ) : (

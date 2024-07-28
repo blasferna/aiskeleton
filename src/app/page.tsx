@@ -87,7 +87,7 @@ export default function SkeletonGenerator() {
                 onClick={() => {
                   navigator.clipboard.writeText(code);
                   setCopyLabel("Copied!");
-                  setTimeout(() => setCopyLabel("Copy"), 3000);
+                  setTimeout(() => setCopyLabel("Copy"), 1500);
                 }}
               >
                 {copyLabel === "Copied!" ? (
