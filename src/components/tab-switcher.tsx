@@ -1,5 +1,6 @@
 import { Code, Eye } from "lucide-react";
 import React from "react";
+import ReactIcon from "@/components/icons";
 
 interface TabSwitcherProps {
   activeTab: string;
@@ -21,18 +22,26 @@ const TabSwitcher: React.FC<TabSwitcherProps> = ({
         onClick={() => onTabChange("preview")}
       >
         <Eye className="w-4 h-4" />
-        Preview
       </button>
       <button
         className={`px-3 py-1 text-sm flex items-center gap-2 rounded ${
-          activeTab === "code"
+          activeTab === "html"
             ? "bg-gray-700 text-white"
             : "text-gray-400 hover:text-gray-200"
         }`}
-        onClick={() => onTabChange("code")}
+        onClick={() => onTabChange("html")}
       >
         <Code className="w-4 h-4" />
-        Code
+      </button>
+      <button
+        className={`px-3 py-1 text-sm flex items-center gap-2 rounded ${
+          activeTab === "react"
+            ? "bg-gray-700 text-white"
+            : "text-gray-400 hover:text-gray-200"
+        }`}
+        onClick={() => onTabChange("react")}
+      >
+        <ReactIcon />
       </button>
     </div>
   );

@@ -11,19 +11,23 @@ import {
 } from "@codemirror/commands";
 import { bracketMatching } from "@codemirror/language";
 import { html } from "@codemirror/lang-html";
-import { EditorTheme } from "@/types";
+import { javascript } from "@codemirror/lang-javascript";
+import { EditorTheme, EditorLanguage } from "@/types";
 
 interface Props {
   code: string;
   editorTheme: EditorTheme;
   onCodeChange: (code: string) => void;
   editable?: boolean;
+  language?: EditorLanguage;
 }
 
-function CodeMirror({ code, editorTheme, onCodeChange, editable = true }: Props) {
+function CodeMirror({ code, editorTheme, onCodeChange, editable = true, language = EditorLanguage.HTML }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const view = useRef<EditorView | null>(null);
   const theme = editorTheme === EditorTheme.ESPRESSO ? espresso : EditorTheme.DRACULA ? dracula : cobalt;
+  const languageExtension = language === EditorLanguage.HTML ? html() : javascript({ jsx: true });
+
   const editorState = useMemo(
     () =>
       EditorState.create({
@@ -37,7 +41,7 @@ function CodeMirror({ code, editorTheme, onCodeChange, editable = true }: Props)
           ]),
           lineNumbers(),
           bracketMatching(),
-          html(),
+          languageExtension,
           theme,
           EditorView.lineWrapping,
           EditorView.updateListener.of((update: ViewUpdate) => {

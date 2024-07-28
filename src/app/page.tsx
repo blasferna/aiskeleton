@@ -4,6 +4,7 @@ import CodeInput from "@/components/code-input";
 import ResultOutput from "@/components/result-output";
 import TabSwitcher from "@/components/tab-switcher";
 import { useToast } from "@/components/ui/use-toast";
+import { htmlToJsx } from "@/lib/utils";
 import { useCompletion } from "ai/react";
 import { CheckCircleIcon, Copy, LoaderCircle, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -54,7 +55,7 @@ export default function SkeletonGenerator() {
                   ${isLoading ? "opacity-50 cursor-not-allowed" : ""}
                 `}
                 onClick={async () => {
-                  setActiveTab("code");
+                  setActiveTab("html");
                   await complete(htmlCode);
                 }}
                 disabled={isLoading}
@@ -85,7 +86,9 @@ export default function SkeletonGenerator() {
               <button
                 className="bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-gray-50 font-medium text-sm py-2 px-4 rounded inline-flex items-center transition-colors duration-200 ease-in-out"
                 onClick={() => {
-                  navigator.clipboard.writeText(code);
+                  navigator.clipboard.writeText(
+                    activeTab === "html" ? code : htmlToJsx(code)
+                  );
                   setCopyLabel("Copied!");
                   setTimeout(() => setCopyLabel("Copy"), 1500);
                 }}
