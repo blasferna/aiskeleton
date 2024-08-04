@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+function indentContent(content: string, indent: string = '      '): string {
+  return content.split('\n').map(line => indent + line).join('\n');
+}
+
 export function htmlToJsx(
   html: string,
   componentName: string = "HtmlComponent"
@@ -19,13 +23,14 @@ export function htmlToJsx(
       /([a-zA-Z-]+)=/g,
       (match: string, p1: string) => `${toCamelCase(p1)}=`
     );
-
+  
+  const jsxContentIndented: string = indentContent(jsxContent);
   const component: string = `import React from 'react';
 
 const ${componentName} = () => {
   return (
     <>
-      ${jsxContent}
+${jsxContentIndented}
     </>
   );
 };
