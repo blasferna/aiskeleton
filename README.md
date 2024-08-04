@@ -1,7 +1,8 @@
 
 # Skeleton Generator
 
-![image](https://github.com/user-attachments/assets/16d27ec3-b370-4237-b57d-5fb6448f1c26)
+![image](https://github.com/user-attachments/assets/c634e212-36c4-4478-a662-d4c2fbe215e1)
+
 
 ## Overview
 
