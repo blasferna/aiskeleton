@@ -25,7 +25,7 @@ const EmptyState: React.FC = () => {
           <Step number={3} text="Watch your skeleton come to life here!" />
         </div>
         <p className="text-gray-400 text-sm italic bg-gray-700 p-3 rounded">
-          Pro tip: The generator works best with Tailwind CSS code.
+          Pro tip: The generator works best with Tailwind CSS classes. 
         </p>
       </div>
     </div>

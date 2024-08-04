@@ -10,7 +10,7 @@ function indentContent(content: string, indent: string = '      '): string {
 }
 
 export function htmlToJsx(
-  html: string,
+  html: string = "",
   componentName: string = "HtmlComponent"
 ): string {
   const toCamelCase = (str: string): string =>
@@ -37,5 +37,5 @@ ${jsxContentIndented}
 
 export default ${componentName};
 `;
-  return component;
+  return html.length > 0 ? component : "";
 }
