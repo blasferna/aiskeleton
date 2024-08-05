@@ -1,6 +1,6 @@
+import { ReactIcon } from "@/components/icons";
 import { Code, Eye } from "lucide-react";
 import React from "react";
-import ReactIcon from "@/components/icons";
 
 interface TabSwitcherProps {
   activeTab: string;

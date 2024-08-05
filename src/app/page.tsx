@@ -1,6 +1,7 @@
 "use client";
 
 import CodeInput from "@/components/code-input";
+import { GitHubIcon } from "@/components/icons";
 import ResultOutput from "@/components/result-output";
 import TabSwitcher from "@/components/tab-switcher";
 import { useToast } from "@/components/ui/use-toast";
@@ -39,6 +40,14 @@ export default function SkeletonGenerator() {
           <h1 className="text-2xl font-bold text-gray-50">
             Skeleton Generator
           </h1>
+          <a
+            href="https://github.com/blasferna/aiskeleton"
+            target="_blank"
+            rel="noopener"
+            className="text-gray-300 hover:text-gray-50"
+          >
+            <GitHubIcon />
+          </a>
         </div>
       </header>
       <main className="flex-grow flex overflow-hidden bg-gray-900">
